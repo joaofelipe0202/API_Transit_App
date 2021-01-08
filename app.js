@@ -6,7 +6,7 @@ const destinationForm = document.querySelector('.destination-form');
 const originsList = document.querySelector('.origins');
 const destinationsList = document.querySelector('.destinations');
 const myTrip = document.querySelector('.my-trip');
-const planTrip = document.querySelector('.plan-trip');
+const planTripBtn = document.querySelector('.plan-trip');
 
 let originLat, originLong, destinationLat, destinationLong;
 
@@ -23,13 +23,15 @@ const getLocations = (query, resultsList) => {
 }
 
 const renderLocations = (placesList, resultsList) => {
-  const noResults = 'Could not find any result for your search. Check the input and try again.'
-  if (placesList.length === 0) {
-    resultsList.innerHTML = `<div>${noResults}</div>`;
+  let placesInfo = '';
+  if (placesList.features.length === 0) {
+    resultsList.innerHTML = `<li><div>No search results were found 😢, please try again.</div></li>`;
   } else {
-    let placesInfo = '';
     resultsList.innerHTML = '';
     placesList.features.forEach(place => {
+      if (place.properties.address === undefined) {
+        place.properties.address = 'Winnipeg, MB';
+      }  
       placesInfo += `
         <li data-long="${place.center[0]}" data-lat="${place.center[1]}" class="selected">
           <div class="name">${place.text}</div>
@@ -37,8 +39,7 @@ const renderLocations = (placesList, resultsList) => {
         </li>`
     })
     resultsList.innerHTML = placesInfo;
-  }
-  
+  }  
 }
 
 const getTrip = () => {
@@ -56,30 +57,38 @@ const getTrip = () => {
 }
 
 const planMyTrip = tripData => {
+  myTrip.innerHTML = '';
   let tripInfo = '';
   tripData.segments.forEach(trip => {
     if (trip.type === 'walk') {
-      tripInfo = 
+      const string = `${trip.type} for ${trip.times.durations.total} minutes to ${trip.to.stop ===undefined ? 'destination' : `stop #${trip.to.stop.key} - ${trip.to.stop.name}`}`
+      tripInfo += 
       `
       <li>
-        <i class="fas fa-walking" aria-hidden="true"></i>${trip.type} for ${trip.times.durations.total} minutes to ${trip.to.stop ===undefined ? 'destination' : `stop #${trip.to.stop.key} - ${trip.to.stop.name}`}
+        <i class="fas fa-walking" aria-hidden="true"></i>${capitalizeFirstLetter(string)}
       </li>`;
     } else if (trip.type === 'ride') {
-      tripInfo =
+      const string = `${trip.type} the ${trip.route.name === undefined ? trip.route.number : trip.route.name} for ${trip.times.durations.total} minutes.`
+      tripInfo +=
         `
         <li>
-          <i class="fas fa-bus" aria-hidden="true"></i>${trip.type} the ${trip.route.name === undefined ? trip.route.number : trip.route.name} for ${trip.times.durations.total} minutes.
+          <i class="fas fa-bus" aria-hidden="true"></i>${capitalizeFirstLetter(string)}
         </li>`;
     } else if (trip.type === 'transfer') {
-      tripInfo =
+      const string = `${trip.type} from stop #${trip.from.stop.key} - ${trip.from.stop.name} to stop #${trip.from.stop.key} - ${trip.from.stop.name}`
+      tripInfo +=
       `
       <li>
-        <i class="fas fa-ticket-alt" aria-hidden="true"></i>${trip.type} from stop #${trip.from.stop.key} - ${trip.from.stop.name} to stop #${trip.from.stop.key} - ${trip.from.stop.name}
+        <i class="fas fa-ticket-alt" aria-hidden="true"></i>${capitalizeFirstLetter(string)}
       </li>
       `;
     }
-    myTrip.insertAdjacentHTML('afterbegin', tripInfo);
   })
+  myTrip.innerHTML = tripInfo;
+}
+
+const capitalizeFirstLetter = string => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 originForm.addEventListener('submit', e => {
@@ -134,4 +143,18 @@ destinationsList.addEventListener('click', e => {
   destinationLong = li.dataset.long;
   console.log(destinationLat);
   console.log(destinationLong)
+})
+
+planTripBtn.addEventListener('click', () => {
+  getTrip();
+
+  if ((originLat === destinationLat) && (originLong === destinationLong)) {
+    const alert = 'Your origin and destination are the same, please change one of them 😃';
+    myTrip.innerHTML = `<li>${alert}</li>`;
+  }
+
+  if ((originLat === undefined) || (destinationLat === undefined) || (originLong === undefined) || (destinationLong === undefined)) {
+    const alert = 'You have to select at least one origin and one destination';
+    myTrip.innerHTML = `<li>${alert}</li>`
+  }
 })
