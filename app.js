@@ -6,6 +6,7 @@ const destinationForm = document.querySelector('.destination-form');
 const originsList = document.querySelector('.origins');
 const destinationsList = document.querySelector('.destinations');
 const myTrip = document.querySelector('.my-trip');
+const planTrip = document.querySelector('.plan-trip');
 
 let originLat, originLong, destinationLat, destinationLong;
 
@@ -40,14 +41,17 @@ const renderLocations = (placesList, resultsList) => {
   
 }
 
-const getStops = () => {
-  return fetch(`https://api.winnipegtransit.com/v3/trip-planner.json?api-key=${apiTransitKey}&origin=geo/${originCordLat},${originCordLong}&destination=geo/${destinationCordLat},${destinationCordLong}`)
+const getTrip = () => {
+  return fetch(`https://api.winnipegtransit.com/v3/trip-planner.json?api-key=${apiTransitKey}&origin=geo/${originLat},${originLong}&destination=geo/${destinationLat},${destinationLong}`)
     .then(response => {
       if (response.ok) {
         return response.json();
       } else {
         Promise.reject({response: response.status, response: response.statusText});
       }
+    })
+    .then(data => {
+      planMyTrip(data.plans[0])
     })
 }
 
@@ -100,4 +104,34 @@ destinationForm.addEventListener('submit', e => {
   
   destinationInput.value = '';
   e.preventDefault();
+})
+
+originsList.addEventListener('click', e => {
+  const li = e.target.closest('LI');
+  const allLi = document.querySelectorAll('.origins li');
+  
+  allLi.forEach(liSelected => {
+    liSelected.classList.remove('selected');
+  })
+  li.classList.add('selected');
+
+  originLat = li.dataset.lat;
+  originLong = li.dataset.long;
+  console.log(originLat);
+  console.log(originLong)
+})
+
+destinationsList.addEventListener('click', e => {
+  const li = e.target.closest('LI');
+  const allLi = document.querySelectorAll('.destinations li');
+  
+  allLi.forEach(liSelected => {
+    liSelected.classList.remove('selected');
+  })
+  li.classList.add('selected');
+
+  destinationLat = li.dataset.lat;
+  destinationLong = li.dataset.long;
+  console.log(destinationLat);
+  console.log(destinationLong)
 })
