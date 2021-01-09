@@ -15,5 +15,13 @@
   "bugs": {
     "url": "https://github.com/joaofelipe0202/johnny-barbosa-final-project/issues"
   },
-  "homepage": "https://github.com/joaofelipe0202/johnny-barbosa-final-project#readme"
+  "homepage": "https://github.com/joaofelipe0202/johnny-barbosa-final-project#readme",
+  "devDependencies": {
+    "cssnano": "^4.1.10",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-postcss": "^9.0.0",
+    "gulp-terser": "^2.0.1",
+    "postcss": "^8.2.4"
+  }
 }
