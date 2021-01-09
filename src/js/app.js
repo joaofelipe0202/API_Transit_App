@@ -154,7 +154,7 @@ planTripBtn.addEventListener('click', () => {
   }
 
   if ((originLat === undefined) || (destinationLat === undefined) || (originLong === undefined) || (destinationLong === undefined)) {
-    const alert = 'You have to select at least one origin and one destination';
+    const alert = 'You must select at least one origin and one destination 🤔';
     myTrip.innerHTML = `<li>${alert}</li>`
   }
 })
