@@ -10,7 +10,7 @@ const planTripBtn = document.querySelector('.plan-trip');
 
 let originLat, originLong, destinationLat, destinationLong;
 
-const getLocations = (query, resultsList) => {
+const getOriginAndDestination = (query, resultsList) => {
   return fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${apiTokenMapbox}&limit=10&bbox=-97.325875,49.766204,-96.953987,49.99275`)
     .then(response => {
       if (response.ok) {
@@ -96,7 +96,7 @@ originForm.addEventListener('submit', e => {
   let originInputValue = originInput.value;
   
   if (originInputValue !== '') {
-    getLocations(originInputValue, originsList);
+    getOriginAndDestination(originInputValue, originsList);
   }
   
   originInput.value = '';
@@ -108,7 +108,7 @@ destinationForm.addEventListener('submit', e => {
   let destinationInputValue = destinationInput.value;
   
   if (destinationInputValue !== '') {
-    getLocations(destinationInputValue, destinationsList);
+    getOriginAndDestination(destinationInputValue, destinationsList);
   }
   
   destinationInput.value = '';
