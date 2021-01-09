@@ -1,0 +1,19 @@
+{
+  "name": "johnny-barbosa-final-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaofelipe0202/johnny-barbosa-final-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joaofelipe0202/johnny-barbosa-final-project/issues"
+  },
+  "homepage": "https://github.com/joaofelipe0202/johnny-barbosa-final-project#readme"
+}
